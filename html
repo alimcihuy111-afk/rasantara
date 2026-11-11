@@ -1,0 +1,814 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rasantara - Resep Makanan Nusantara</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#FFF7ED',
+                            100: '#FFEDD5',
+                            500: '#FF7A00',
+                            600: '#EA580C',
+                            700: '#C2410C',
+                            accent: '#FF9500'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Smooth Scroll & Scrollbar Styling */
+        html { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #FFF7ED; }
+        ::-webkit-scrollbar-thumb { background: #FFB74D; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #FF7A00; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="bg-orange-50/40 text-gray-800 font-sans min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white">
+
+    <!-- HEADER / HERO SECTION -->
+    <header class="bg-gradient-to-r from-orange-500 via-brand-500 to-amber-500 text-white shadow-xl relative overflow-hidden">
+        <!-- Background Decorative SVG Circles -->
+        <div class="absolute -top-10 -right-10 w-60 h-60 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute -bottom-10 -left-10 w-60 h-60 bg-black/10 rounded-full blur-xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 relative z-10">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                
+                <!-- Logo & Brand Info -->
+                <div class="flex items-center gap-5 text-center md:text-left">
+                    <div class="relative group">
+                        <div class="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white p-1.5 shadow-2xl ring-4 ring-white/30 transform transition duration-300 group-hover:scale-105 flex items-center justify-center overflow-hidden">
+                            <!-- SVG Decorative Logo inspired by Tumpeng Nusantara -->
+                            <svg viewBox="0 0 200 200" class="w-full h-full">
+                                <circle cx="100" cy="100" r="95" fill="#FFF7ED" stroke="#FF7A00" stroke-width="4"/>
+                                <!-- Kompas / Padi Motif Outer Ring -->
+                                <circle cx="100" cy="100" r="82" fill="none" stroke="#FF9500" stroke-width="2" stroke-dasharray="6,4"/>
+                                <!-- Tumpeng Cone -->
+                                <polygon points="100,35 145,135 55,135" fill="#FF9500"/>
+                                <polygon points="100,35 125,135 75,135" fill="#FF7A00"/>
+                                <!-- Rice Layer Base -->
+                                <ellipse cx="100" cy="135" rx="50" ry="12" fill="#D97706"/>
+                                <!-- Decorative Leaves Base -->
+                                <path d="M40 140 Q 60 120 80 140 Q 100 120 120 140 Q 140 120 160 140 Q 100 170 40 140 Z" fill="#15803D"/>
+                                <!-- Chili/Garnish Accent -->
+                                <path d="M 65 110 Q 55 90 45 95" stroke="#DC2626" stroke-width="5" stroke-linecap="round" fill="none"/>
+                                <!-- Star Compass top -->
+                                <polygon points="100,15 104,25 100,30 96,25" fill="#B45309"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-center md:justify-start gap-2">
+                            <h1 class="text-3xl md:text-5xl font-extrabold font-serif tracking-tight drop-shadow-md">Rasantara</h1>
+                            <span class="bg-white/20 text-xs px-2.5 py-1 rounded-full uppercase tracking-wider font-semibold border border-white/30">Nusantara</span>
+                        </div>
+                        <p class="text-orange-100 mt-1.5 text-sm md:text-base font-medium max-w-md">
+                            Jelajah Cita Rasa Resep Kuliner Autentik Nusantara
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Action Bar: Live Search & Add Recipe Button -->
+                <div class="w-full md:w-auto flex flex-col sm:flex-row items-center gap-3">
+                    <div class="w-full sm:w-72 relative">
+                        <input type="text" id="searchInput" onkeyup="filterRecipes()" placeholder="Cari resep atau bahan..." 
+                            class="w-full pl-11 pr-4 py-3 rounded-full text-gray-800 bg-white shadow-lg focus:outline-none focus:ring-4 focus:ring-orange-300 transition duration-200 placeholder-gray-400 text-sm font-medium">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-brand-500">
+                            <i class="fas fa-search text-lg"></i>
+                        </div>
+                    </div>
+                    <button onclick="openAddRecipeModal()" class="w-full sm:w-auto bg-white text-brand-600 hover:bg-orange-50 active:bg-orange-100 font-bold px-5 py-3 rounded-full shadow-lg transition duration-200 flex items-center justify-center gap-2 text-sm whitespace-nowrap border border-white/50">
+                        <i class="fas fa-plus-circle text-brand-500 text-base"></i> Tambah Resep
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+        
+        <!-- CATEGORY NAVIGATION / TABS -->
+        <section class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                    <i class="fas fa-map-marked-alt text-brand-500"></i> Kategori Daerah
+                </h2>
+                <span id="recipeCount" class="text-xs font-semibold text-brand-600 bg-brand-100 px-3 py-1 rounded-full">7 Resep Tersedia</span>
+            </div>
+
+            <!-- Tab Buttons Container (Scrollable on mobile) -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-3 pt-1 scrollbar-none no-scrollbar">
+                <button onclick="selectCategory('all')" id="tab-all" class="category-tab px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition duration-200 bg-brand-500 text-white shadow-md hover:bg-brand-600 flex items-center gap-2">
+                    <i class="fas fa-globe-asia"></i> Semua Daerah
+                </button>
+                <button onclick="selectCategory('Sumatera')" id="tab-Sumatera" class="category-tab px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition duration-200 bg-white text-gray-600 hover:bg-orange-100 hover:text-brand-600 shadow-sm border border-orange-100 flex items-center gap-2">
+                    <i class="fas fa-mountain"></i> Sumatera
+                </button>
+                <button onclick="selectCategory('Jawa')" id="tab-Jawa" class="category-tab px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition duration-200 bg-white text-gray-600 hover:bg-orange-100 hover:text-brand-600 shadow-sm border border-orange-100 flex items-center gap-2">
+                    <i class="fas fa-monument"></i> Jawa
+                </button>
+                <button onclick="selectCategory('Kalimantan')" id="tab-Kalimantan" class="category-tab px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition duration-200 bg-white text-gray-600 hover:bg-orange-100 hover:text-brand-600 shadow-sm border border-orange-100 flex items-center gap-2">
+                    <i class="fas fa-tree"></i> Kalimantan
+                </button>
+                <button onclick="selectCategory('Sulawesi')" id="tab-Sulawesi" class="category-tab px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition duration-200 bg-white text-gray-600 hover:bg-orange-100 hover:text-brand-600 shadow-sm border border-orange-100 flex items-center gap-2">
+                    <i class="fas fa-water"></i> Sulawesi
+                </button>
+                <button onclick="selectCategory('NTB')" id="tab-NTB" class="category-tab px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition duration-200 bg-white text-gray-600 hover:bg-orange-100 hover:text-brand-600 shadow-sm border border-orange-100 flex items-center gap-2">
+                    <i class="fas fa-umbrella-beach"></i> NTB
+                </button>
+                <button onclick="selectCategory('NTT')" id="tab-NTT" class="category-tab px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition duration-200 bg-white text-gray-600 hover:bg-orange-100 hover:text-brand-600 shadow-sm border border-orange-100 flex items-center gap-2">
+                    <i class="fas fa-sun"></i> NTT
+                </button>
+                <button onclick="selectCategory('Papua')" id="tab-Papua" class="category-tab px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition duration-200 bg-white text-gray-600 hover:bg-orange-100 hover:text-brand-600 shadow-sm border border-orange-100 flex items-center gap-2">
+                    <i class="fas fa-feather-alt"></i> Papua
+                </button>
+            </div>
+        </section>
+
+        <!-- RECIPE CARDS GRID -->
+        <section id="recipeGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Dynamic Recipe Cards injected here via JavaScript -->
+        </section>
+
+        <!-- EMPTY STATE (SHOWS WHEN NO RECIPE MATCHES SEARCH) -->
+        <div id="emptyState" class="hidden text-center py-16 px-4">
+            <div class="w-20 h-20 bg-orange-100 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                <i class="fas fa-utensils"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-1">Resep Tidak Ditemukan</h3>
+            <p class="text-gray-500 text-sm max-w-sm mx-auto">Coba cari dengan kata kunci lain atau pilih kategori daerah yang berbeda.</p>
+        </div>
+    </main>
+
+    <!-- RECIPE DETAIL MODAL POPUP -->
+    <div id="recipeModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/60 backdrop-blur-sm transition-opacity duration-300 flex items-center justify-center p-3 sm:p-4 md:p-6">
+        
+        <div class="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col transform transition-all scale-95 opacity-0 duration-300" id="modalContainer">
+            
+            <!-- Modal Header with Image & Title Overlay -->
+            <div class="relative h-60 sm:h-72 w-full flex-shrink-0 bg-gray-200">
+                <img id="modalImg" src="" alt="Foto Makanan" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
+                
+                <!-- Close Button -->
+                <button onclick="closeModal()" class="absolute top-4 right-4 bg-white/80 hover:bg-white text-gray-800 w-10 h-10 rounded-full flex items-center justify-center transition shadow-lg backdrop-blur-md">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+
+                <!-- Badge & Title -->
+                <div class="absolute bottom-4 left-4 right-4 text-white">
+                    <span id="modalRegionBadge" class="bg-brand-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-2 shadow">
+                        Daerah
+                    </span>
+                    <h2 id="modalTitle" class="text-2xl sm:text-3xl font-serif font-bold leading-tight drop-shadow">
+                        Nama Makanan
+                    </h2>
+                    <p id="modalSubRegion" class="text-orange-200 text-xs sm:text-sm font-medium flex items-center gap-1.5 mt-1">
+                        <i class="fas fa-map-marker-alt"></i> Asal: Sumatera Barat
+                    </p>
+                </div>
+            </div>
+
+            <!-- Modal Content Body (Scrollable) -->
+            <div class="p-5 sm:p-7 overflow-y-auto space-y-6 flex-grow">
+                
+                <!-- Section 1: Asal-Usul -->
+                <div class="bg-orange-50/60 p-4 rounded-2xl border border-orange-100">
+                    <h3 class="text-base font-bold text-brand-700 mb-2 flex items-center gap-2">
+                        <i class="fas fa-book-open"></i> Asal-Usul & Latar Belakang
+                    </h3>
+                    <p id="modalOrigin" class="text-gray-700 text-sm leading-relaxed">
+                        Deskripsi asal-usul makanan...
+                    </p>
+                </div>
+
+                <!-- Section 2: Bahan-Bahan -->
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2 border-b border-gray-100 pb-2">
+                        <i class="fas fa-shopping-basket text-brand-500"></i> Bahan-Bahan
+                    </h3>
+                    <p class="text-xs text-gray-500 mb-3"><i class="fas fa-info-circle"></i> Centang bahan yang sudah kamu siapkan:</p>
+                    <ul id="modalIngredients" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-gray-700">
+                        <!-- Ingredients List Dynamic -->
+                    </ul>
+                </div>
+
+                <!-- Section 3: Langkah Memasak -->
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2 border-b border-gray-100 pb-2">
+                        <i class="fas fa-list-ol text-brand-500"></i> Langkah-Langkah Memasak
+                    </h3>
+                    <ol id="modalSteps" class="space-y-3 text-sm text-gray-700">
+                        <!-- Steps Dynamic -->
+                    </ol>
+                </div>
+
+                <!-- Section 4: Tips Rahasia -->
+                <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200/60 flex gap-3.5 items-start">
+                    <div class="w-9 h-9 bg-amber-500 text-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-md">
+                        <i class="fas fa-lightbulb text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-amber-900 text-sm mb-1">Tips Rahasia Chef Rasantara</h4>
+                        <p id="modalTips" class="text-amber-800 text-xs sm:text-sm leading-relaxed">
+                            Tips spesial...
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 bg-gray-50 border-t border-gray-100 flex justify-end">
+                <button onclick="closeModal()" class="px-6 py-2.5 bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold rounded-full transition shadow-md">
+                    Tutup Resep
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ADD RECIPE MODAL FORM -->
+    <div id="addRecipeModal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/60 backdrop-blur-sm transition-opacity duration-300 flex items-center justify-center p-3 sm:p-4 md:p-6">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col transform transition-all scale-95 opacity-0 duration-300" id="addModalContainer">
+            
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-brand-500 to-amber-500 p-5 sm:p-6 text-white flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-xl">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold font-serif">Bagikan Resep Nusantara</h2>
+                        <p class="text-xs text-orange-100">Tambahkan sajian kebanggaan daerahmu ke Rasantara</p>
+                    </div>
+                </div>
+                <button onclick="closeAddRecipeModal()" class="bg-white/20 hover:bg-white/40 text-white w-9 h-9 rounded-full flex items-center justify-center transition">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Modal Form Body -->
+            <form id="addRecipeForm" onsubmit="handleAddRecipe(event)" class="p-5 sm:p-6 overflow-y-auto space-y-4 flex-grow text-gray-700">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Nama Makanan -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Nama Makanan *</label>
+                        <input type="text" id="newRecipeName" required placeholder="Contoh: Mie Aceh Kak Mue" 
+                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm">
+                    </div>
+                    <!-- Kategori Daerah -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Kategori Daerah *</label>
+                        <select id="newRecipeRegion" required class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm bg-white">
+                            <option value="Sumatera">Sumatera</option>
+                            <option value="Jawa">Jawa</option>
+                            <option value="Kalimantan">Kalimantan</option>
+                            <option value="Sulawesi">Sulawesi</option>
+                            <option value="NTB">NTB</option>
+                            <option value="NTT">NTT</option>
+                            <option value="Papua">Papua</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Detail Kota/Provinsi -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Spesifik Asal Daerah *</label>
+                        <input type="text" id="newRecipeSubRegion" required placeholder="Contoh: Aceh / Banda Aceh" 
+                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm">
+                    </div>
+                    <!-- URL Gambar -->
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">URL Gambar (Opsional)</label>
+                        <input type="url" id="newRecipeImage" placeholder="https://..." 
+                            class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm">
+                    </div>
+                </div>
+
+                <!-- Asal-Usul / Sejarah -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Asal-Usul / Sejarah Singkat *</label>
+                    <textarea id="newRecipeOrigin" required rows="2" placeholder="Ceritakan sedikit latar belakang atau tradisi masakan ini..." 
+                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm"></textarea>
+                </div>
+
+                <!-- Bahan-Bahan -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Bahan-Bahan * <span class="text-gray-400 font-normal lowercase">(pisahkan dengan baris baru)</span></label>
+                    <textarea id="newRecipeIngredients" required rows="3" placeholder="500g daging sapi&#10;3 siung bawang putih&#10;1 sdt garam" 
+                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm"></textarea>
+                </div>
+
+                <!-- Langkah Memasak -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Langkah Memasak * <span class="text-gray-400 font-normal lowercase">(pisahkan dengan baris baru)</span></label>
+                    <textarea id="newRecipeSteps" required rows="3" placeholder="Tumis bumbu hingga harum.&#10;Masukkan bahan utama lalu aduk rata.&#10;Masak hingga matang dan sajikan." 
+                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm"></textarea>
+                </div>
+
+                <!-- Tips Memasak -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Tips Rahasia Memasak *</label>
+                    <input type="text" id="newRecipeTips" required placeholder="Contoh: Gunakan api kecil agar bumbu lebih meresap sempurna." 
+                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm">
+                </div>
+
+                <!-- Submit Button Inside Form Footer -->
+                <div class="pt-3 border-t border-gray-100 flex items-center justify-end gap-3">
+                    <button type="button" onclick="closeAddRecipeModal()" class="px-5 py-2.5 text-gray-600 hover:bg-gray-100 rounded-full text-sm font-semibold transition">
+                        Batal
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-full text-sm font-semibold transition shadow-md flex items-center gap-2">
+                        <i class="fas fa-paper-plane"></i> Simpan & Publikasikan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-orange-100 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex items-center justify-center gap-2 mb-2">
+                <span class="font-serif font-bold text-xl text-brand-500">Rasantara</span>
+                <span class="text-xs bg-orange-100 text-brand-600 font-bold px-2 py-0.5 rounded-full">Resep Nusantara</span>
+            </div>
+            <p class="text-xs text-gray-500">© 2026 Rasantara - Warisan Kuliner Kaya Rasa Indonesia. Dibuat dengan penuh rasa cinta pada masakan daerah.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Database Makanan Nusantara (1 Makanan per 7 Daerah)
+        const recipes = [
+            {
+                id: 'rendang',
+                name: 'Rendang Daging',
+                region: 'Sumatera',
+                subRegion: 'Sumatera Barat (Minangkabau)',
+                image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=800&q=80',
+                cookingTime: '4 Jam',
+                difficulty: 'Sedang - Tinggi',
+                origin: 'Rendang lahir dari tradisi merantau masyarakat Minangkabau. Proses memasak santan dan rempah dalam waktu lama menghasilkan olahan daging yang tahan lama hingga berminggu-minggu, cocok sebagai bekal perjalanan jauh para perantau Minang.',
+                ingredients: [
+                    '1 kg daging sapi khas dalam/paha',
+                    '1.000 ml santan kental dari 3 butir kelapa',
+                    '2 lembar daun kunyit, simpulkan',
+                    '4 lembar daun jeruk purut',
+                    '2 batang serai, memarkan',
+                    '2 buah asam kandis',
+                    '12 siung bawang merah & 6 siung bawang putih',
+                    '100g cabai merah keriting',
+                    '2 cm jahe, lengkuas & kunyit bakar'
+                ],
+                steps: [
+                    'Haluskan bawang merah, bawang putih, cabai, jahe, kunyit, dan lengkuas.',
+                    'Didihkan santan kental bersama bumbu halus, daun kunyit, daun jeruk, dan serai sambil terus diaduk agar santan tidak pecah.',
+                    'Setelah santan mengeluarkan minyak dan mengental, masukkan potongan daging sapi.',
+                    'Kecilkan api, masak terus hingga cairan menyusut (kalio) dan terus aduk perlahan hingga bumbu berubah warna menjadi cokelat kehitaman dan kering minyak.'
+                ],
+                tips: 'Gunakan santan murni dari kelapa tua. Jangan berhenti mengaduk saat proses pengentalan awal agar santan pecah minyak sempurna dan bumbu tidak gosong di dasar wajan.'
+            },
+            {
+                id: 'rawon',
+                name: 'Rawon Daging Sapi',
+                region: 'Jawa',
+                subRegion: 'Jawa Timur (Surabaya)',
+                image: 'https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80',
+                cookingTime: '2 Jam',
+                difficulty: 'Sedang',
+                origin: 'Rawon adalah salah satu masakan tertua di Jawa yang dicatat dalam prasasti kuno Taji (901 M) dengan nama "Rarawwan". Kuah hitam pekat khas rawon berasal dari buah kluwek alami yang memberikan cita rasa gurih legit dan beraroma harum.',
+                ingredients: [
+                    '500g daging sapi (sandung lamur)',
+                    '6 buah kluwek (ambil isinya, rendam air hangat)',
+                    '8 siung bawang merah & 4 siung bawang putih',
+                    '3 butir kemiri sangrai & 1 sdt ketumbar',
+                    '2 batang serai & 3 cm lengkuas memarkan',
+                    '4 lembar daun jeruk',
+                    'Toge pendek, sambal terasi & telur asin (pelengkap)'
+                ],
+                steps: [
+                    'Rebus daging sapi hingga empuk, lalu potong dadu. Saring air rebusan untuk dijadikan kuah kaldu.',
+                    'Haluskan bumbu halus bersama isi kluwek yang sudah direndam.',
+                    'Tumis bumbu halus, serai, lengkuas, dan daun jeruk hingga harum dan matang sempurna.',
+                    'Masukkan tumisan bumbu ke dalam air kaldu daging. Masak hingga bumbu meresap ke dalam daging.',
+                    'Sajikan hangat bersama taburan toge pendek segar, telur asin, dan sambal terasi.'
+                ],
+                tips: 'Pilih kluwek yang rasanya tidak pahit dengan cara mencicipi sedikit daging buahnya sebelum dihaluskan. Kluwek berkualitas baik terasa gurih dan berwarna hitam pekat.'
+            },
+            {
+                id: 'soto-banjar',
+                name: 'Soto Banjar',
+                region: 'Kalimantan',
+                subRegion: 'Kalimantan Selatan (Banjarmasin)',
+                image: 'https://images.unsplash.com/photo-1572656631137-7935297eff55?auto=format&fit=crop&w=800&q=80',
+                cookingTime: '1.5 Jam',
+                difficulty: 'Mudah - Sedang',
+                origin: 'Soto Banjar merupakan warisan kuliner suku Banjar yang terpengaruh perdagangan rempah dunia. Kekhasannya terletak pada aroma harum rempah manis seperti kayu manis, cengkeh, kapulaga, dan bunga lawang yang berpadu halus dalam kuah ayam suwir.',
+                ingredients: [
+                    '1 ekor ayam kampung',
+                    '2 batang kayu manis & 4 butir kapulaga',
+                    '3 butir cengkeh & 2 buah bunga lawang (pekak)',
+                    '8 siung bawang merah & 5 siung bawang putih',
+                    '1/2 sdt pala bubuk & 1 sdt lada putih',
+                    'Ketupat/lontong, perkedel kentang & telur rebus',
+                    'Soun & daun seledri cincang'
+                ],
+                steps: [
+                    'Rebus ayam kampung bersama kayu manis, kapulaga, cengkeh, dan bunga lawang hingga ayam empuk dan kaldu harum.',
+                    'Angkat ayam, suwir-suwir dagingnya, sisihkan.',
+                    'Haluskan bawang merah, bawang putih, pala, dan lada. Tumis hingga harum lalu masukkan ke dalam kuah kaldu rebusan ayam.',
+                    'Tata ketupat, soun, suwiran ayam, perkedel kentang, dan potongan telur rebus di mangkuk.',
+                    'Siram dengan kuah soto Banjar panas dan taburi seledri serta perasan jeruk nipis.'
+                ],
+                tips: 'Tambahkan sedikit susu evaporasi atau sedikit kocokan kuning telur rebus ke dalam kuah kaldu untuk hasil kuah Soto Banjar yang agak gurih creamy memikat.'
+            },
+            {
+                id: 'coto-makassar',
+                name: 'Coto Makassar',
+                region: 'Sulawesi',
+                subRegion: 'Sulawesi Selatan (Makassar)',
+                image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=800&q=80',
+                cookingTime: '2.5 Jam',
+                difficulty: 'Sedang',
+                origin: 'Coto Makassar telah ada sejak zaman Kerajaan Gowa pada abad ke-16. Dahulu, hidangan daging sapi bagian terbaik disajikan untuk kalangan istana raja, sedangkan jeroan disajikan untuk masyarakat umum. Coto disajikan khas dengan ketupat daun kelapa.',
+                ingredients: [
+                    '500g daging sapi & 300g jeroan sapi (paru/babat)',
+                    '100g kacang tanah kulit (sangrai, kupas, haluskan)',
+                    '2.000 ml air cucian beras putih yang terakhir (tajin)',
+                    '10 siung bawang merah & 6 siung bawang putih',
+                    '1 sdm ketumbar sangrai, 1 sdt jintan & 3 butir kemiri',
+                    '3 batang serai & 3 cm lengkuas',
+                    'Ketupat & daun bawang cincang'
+                ],
+                steps: [
+                    'Rebus daging dan jeroan sapi menggunakan air cucian beras bersama serai dan lengkuas hingga empuk.',
+                    'Angkat daging dan jeroan, potong dadu kecil-kecil.',
+                    'Haluskan bawang merah, bawang putih, ketumbar, jintan, dan kemiri. Tumis hingga benar-benar matang dan harum.',
+                    'Masukkan tumisan bumbu halus dan kacang tanah yang sudah dihaluskan ke dalam air rebusan kaldu.',
+                    'Masak hingga kuah mengental dan gurih. Masukkan kembali daging potong, sajikan bersama ketupat.'
+                ],
+                tips: 'Air cucian beras (tajin) adalah kunci utama kelezatan tekstur kuah Coto Makassar yang kental alami dan gurih meresap.'
+            },
+            {
+                id: 'ayam-taliwang',
+                name: 'Ayam Taliwang',
+                region: 'NTB',
+                subRegion: 'Nusa Tenggara Barat (Lombok)',
+                image: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=800&q=80',
+                cookingTime: '1 Jam',
+                difficulty: 'Sedang',
+                origin: 'Ayam Taliwang berasal dari Karang Taliwang di Mataram, Lombok. Masakan ini pertama kali diciptakan oleh juru masak dari Karang Taliwang pada masa perang antara Kerajaan Selaparang dan Kerajaan Karangasem sebagai hidangan damai.',
+                ingredients: [
+                    '1 ekor ayam kampung muda (belah dua tidak putus)',
+                    '10 buah cabai merah keriting & 8 cabai rawit merah',
+                    '8 siung bawang merah & 4 siung bawang putih',
+                    '2 sdt terasi bakar khas Lombok',
+                    '2 buah tomat merah segar',
+                    '1 sdt gula merah & 1/2 sdt garam',
+                    '2 sdm air perasan jeruk limau'
+                ],
+                steps: [
+                    'Bakar atau panggang ayam kampung muda setengah matang di atas bara api.',
+                    'Haluskan cabai, bawang merah, bawang putih, terasi bakar, dan tomat. Tumis bumbu hingga matang dan harum.',
+                    'Lumuri ayam yang setengah matang dengan bumbu tumisan hingga merata.',
+                    'Panggang kembali ayam sambil terus diolesi bumbu berulang kali hingga bumbu meresap dan terkaramelisasi sempurna.',
+                    'Beri perasan jeruk limau sebelum disajikan hangat bersama plecing kangkung.'
+                ],
+                tips: 'Gunakan ayam kampung yang masih sangat muda (ayam ubi) agar tekstur dagingnya cepat empuk, manis alami, dan bumbu terasi pedas meresap sempurna.'
+            },
+            {
+                id: 'sei-sapi',
+                name: 'Se\'i Sapi Sambal Lu\'at',
+                region: 'NTT',
+                subRegion: 'Nusa Tenggara Timur (Rote / Kupang)',
+                image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+                cookingTime: '3 Jam (Pengasapan)',
+                difficulty: 'Tinggi',
+                origin: 'Se\'i adalah teknik pengasapan daging tradisional khas suku Rote di NTT. Kata "Se\'i" berasal dari bahasa lokal yang berarti daging yang dipotong memanjang dan diasap di atas bara api kayu kosambi untuk mengawetkan daging secara alami.',
+                ingredients: [
+                    '1 kg daging sapi bagian memanjang (daging khas)',
+                    '1 sdm garam & 1 sdt lada hitam bubuk',
+                    '3 siung bawang putih (haluskan)',
+                    'Daun kosambi (atau kayu asap & daun pepaya)',
+                    'Bahan Sambal Lu\'at: Cabai rawit, daun kemangi, jeruk nipis & garam'
+                ],
+                steps: [
+                    'Lumuri potongan daging sapi memanjang dengan garam, lada, dan bawang putih halus. Diamkan 30 menit.',
+                    'Siapkan tempat pengasapan dengan kayu bara dan tutupi dengan daun kosambi/pepaya untuk menghasilkan aroma asap yang kuat.',
+                    'Gantung atau letakkan daging di atas pengasapan (jarak tidak terlalu dekat api agar tidak terbakar langsung).',
+                    'Asap daging selama 2-3 jam hingga matang merata dan berwarna kemerahan eksotis.',
+                    'Iris tipis se\'i sapi dan sajikan bersama sambal lu\'at segar yang pedas asam.'
+                ],
+                tips: 'Kunci aroma khas Se\'i terletak pada asap daun kayu kosambi. Di rumah, Anda bisa menggunakan teflon bernuansa pan-seared dengan sedikit minyak aroma asap (smoke oil).'
+            },
+            {
+                id: 'papeda-ikan-kuah-kunung',
+                name: 'Papeda Ikan Kuah Kuning',
+                region: 'Papua',
+                subRegion: 'Papua & Maluku',
+                image: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=800&q=80',
+                cookingTime: '45 Menit',
+                difficulty: 'Mudah',
+                origin: 'Papeda adalah makanan pokok masyarakat Papua dan Maluku yang terbuat dari tepung sagu. Papeda melambangkan kebersamaan dan kekeluargaan, biasanya disajikan saat acara adat berkumpul bersama dalam satu mangkuk besar.',
+                ingredients: [
+                    '200g tepung sagu murni',
+                    '1.000 ml air panas mendidih',
+                    '500g ikan tongkol / kakap segar',
+                    '6 siung bawang merah & 3 siung bawang putih',
+                    '3 cm kunyit bakar & 2 cm jahe',
+                    '2 batang serai & 4 lembar daun jeruk',
+                    'Daun kemangi segar & perasan jeruk nipis'
+                ],
+                steps: [
+                    'Membuat Papeda: Larutkan tepung sagu dengan sedikit air dingin. Siram dengan air yang benar-benar mendidih sambil terus diaduk cepat hingga mengental bening menyerupai lem.',
+                    'Ikan Kuah Kuning: Tumis bumbu halus (bawang, kunyit, jahe) bersama serai dan daun jeruk hingga harum.',
+                    'Tuang air secukupnya, didihkan. Masukkan potongan ikan segar, garam, dan gula secukupnya.',
+                    'Masak hingga ikan matang, lalu tambahkan daun kemangi dan perasan jeruk nipis sebelum diangkat.',
+                    'Gulung papeda menggunakan sepasang sumpit kayu dan tuangkan kuah kuning ikan segar di atasnya.'
+                ],
+                tips: 'Pastikan air penyiram sagu benar-benar mendidih bergolak (100°C) dan aduk tanpa berhenti agar tekstur papeda menjadi bening, kenyal, dan tidak menggumpal mentah.'
+            }
+        ];
+
+        let currentCategory = 'all';
+
+        // Initialize App on Page Load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderRecipes(recipes);
+        });
+
+        // Render Recipe Cards
+        function renderRecipes(items) {
+            const grid = document.getElementById('recipeGrid');
+            const emptyState = document.getElementById('emptyState');
+            const recipeCount = document.getElementById('recipeCount');
+
+            grid.innerHTML = '';
+            recipeCount.innerText = `${items.length} Resep Tersedia`;
+
+            if (items.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            items.forEach(recipe => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col cursor-pointer border border-orange-100/80 group";
+                card.onclick = () => openModal(recipe.id);
+
+                card.innerHTML = `
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="${recipe.image}" alt="${recipe.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <span class="absolute top-3 left-3 bg-brand-500/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow">
+                            ${recipe.region}
+                        </span>
+                        <div class="absolute bottom-2 right-2 bg-black/60 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-md flex items-center gap-1">
+                            <i class="far fa-clock text-amber-300"></i> ${recipe.cookingTime}
+                        </div>
+                    </div>
+                    <div class="p-5 flex-grow flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-medium text-orange-600 block mb-1">
+                                <i class="fas fa-map-marker-alt"></i> ${recipe.subRegion}
+                            </span>
+                            <h3 class="text-lg font-bold text-gray-800 group-hover:text-brand-500 transition duration-200 font-serif leading-snug">
+                                ${recipe.name}
+                            </h3>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                            <span class="flex items-center gap-1 font-medium text-amber-700">
+                                <i class="fas fa-fire"></i> ${recipe.difficulty}
+                            </span>
+                            <span class="text-brand-500 font-bold group-hover:translate-x-1 transition duration-200 flex items-center gap-1">
+                                Lihat Resep <i class="fas fa-arrow-right text-xs"></i>
+                            </span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Category Filter Logic
+        function selectCategory(category) {
+            currentCategory = category;
+            
+            // Update Tab UI
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('bg-brand-500', 'text-white', 'shadow-md');
+                tab.classList.add('bg-white', 'text-gray-600', 'hover:bg-orange-100', 'hover:text-brand-600', 'border', 'border-orange-100');
+            });
+
+            const activeTab = document.getElementById(`tab-${category}`);
+            if (activeTab) {
+                activeTab.classList.remove('bg-white', 'text-gray-600', 'hover:bg-orange-100', 'hover:text-brand-600', 'border', 'border-orange-100');
+                activeTab.classList.add('bg-brand-500', 'text-white', 'shadow-md');
+            }
+
+            filterRecipes();
+        }
+
+        // Search & Filter Combined Logic
+        function filterRecipes() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            
+            const filtered = recipes.filter(recipe => {
+                const matchesCategory = currentCategory === 'all' || recipe.region.toLowerCase() === currentCategory.toLowerCase();
+                const matchesSearch = recipe.name.toLowerCase().includes(query) || 
+                                      recipe.region.toLowerCase().includes(query) ||
+                                      recipe.subRegion.toLowerCase().includes(query) ||
+                                      recipe.ingredients.some(ing => ing.toLowerCase().includes(query));
+
+                return matchesCategory && matchesSearch;
+            });
+
+            renderRecipes(filtered);
+        }
+
+        // Open Modal Function
+        function openModal(id) {
+            const recipe = recipes.find(r => r.id === id);
+            if (!recipe) return;
+
+            document.getElementById('modalImg').src = recipe.image;
+            document.getElementById('modalTitle').innerText = recipe.name;
+            document.getElementById('modalRegionBadge').innerText = recipe.region;
+            document.getElementById('modalSubRegion').innerHTML = `<i class="fas fa-map-marker-alt"></i> Asal: ${recipe.subRegion}`;
+            document.getElementById('modalOrigin').innerText = recipe.origin;
+            document.getElementById('modalTips').innerText = recipe.tips;
+
+            // Render Ingredients Checkbox
+            const ingContainer = document.getElementById('modalIngredients');
+            ingContainer.innerHTML = '';
+            recipe.ingredients.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = "flex items-start gap-2 bg-orange-50/40 p-2 rounded-lg border border-orange-100/60";
+                li.innerHTML = `
+                    <input type="checkbox" id="ing-${index}" class="mt-1 accent-brand-500 h-4 w-4 rounded cursor-pointer">
+                    <label for="ing-${index}" class="cursor-pointer select-none leading-tight text-gray-700">${item}</label>
+                `;
+                ingContainer.appendChild(li);
+            });
+
+            // Render Steps List
+            const stepsContainer = document.getElementById('modalSteps');
+            stepsContainer.innerHTML = '';
+            recipe.steps.forEach((step, index) => {
+                const li = document.createElement('li');
+                li.className = "flex gap-3 items-start bg-gray-50 p-3 rounded-xl";
+                li.innerHTML = `
+                    <span class="w-6 h-6 bg-brand-500 text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5 shadow-sm">
+                        ${index + 1}
+                    </span>
+                    <p class="text-gray-700 text-sm leading-relaxed">${step}</p>
+                `;
+                stepsContainer.appendChild(li);
+            });
+
+            // Show Modal with Animation
+            const modal = document.getElementById('recipeModal');
+            const container = document.getElementById('modalContainer');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                container.classList.remove('scale-95', 'opacity-0');
+                container.classList.add('scale-100', 'opacity-100');
+            }, 10);
+
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        // Close Modal Function
+        function closeModal() {
+            const modal = document.getElementById('recipeModal');
+            const container = document.getElementById('modalContainer');
+
+            container.classList.remove('scale-100', 'opacity-100');
+            container.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 250);
+        }
+
+        // Close modal when clicking outside content
+        document.getElementById('recipeModal').addEventListener('click', (e) => {
+            if (e.target.id === 'recipeModal') {
+                closeModal();
+            }
+        });
+
+        // Open Add Recipe Modal
+        function openAddRecipeModal() {
+            const modal = document.getElementById('addRecipeModal');
+            const container = document.getElementById('addModalContainer');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                container.classList.remove('scale-95', 'opacity-0');
+                container.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close Add Recipe Modal
+        function closeAddRecipeModal() {
+            const modal = document.getElementById('addRecipeModal');
+            const container = document.getElementById('addModalContainer');
+            container.classList.remove('scale-100', 'opacity-100');
+            container.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                document.getElementById('addRecipeForm').reset();
+            }, 250);
+        }
+
+        // Close Add Recipe Modal when clicking backdrop
+        document.getElementById('addRecipeModal').addEventListener('click', (e) => {
+            if (e.target.id === 'addRecipeModal') {
+                closeAddRecipeModal();
+            }
+        });
+
+        // Handle Add New Recipe Form Submission
+        function handleAddRecipe(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('newRecipeName').value.trim();
+            const region = document.getElementById('newRecipeRegion').value;
+            const subRegion = document.getElementById('newRecipeSubRegion').value.trim();
+            let image = document.getElementById('newRecipeImage').value.trim();
+            const origin = document.getElementById('newRecipeOrigin').value.trim();
+            const ingredientsRaw = document.getElementById('newRecipeIngredients').value.trim();
+            const stepsRaw = document.getElementById('newRecipeSteps').value.trim();
+            const tips = document.getElementById('newRecipeTips').value.trim();
+
+            // Default image fallback if user leaves URL empty
+            if (!image) {
+                image = 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80';
+            }
+
+            // Split multiline input into array
+            const ingredients = ingredientsRaw.split('\n').filter(item => item.trim() !== '');
+            const steps = stepsRaw.split('\n').filter(item => item.trim() !== '');
+
+            const newRecipe = {
+                id: 'custom-' + Date.now(),
+                name: name,
+                region: region,
+                subRegion: subRegion,
+                image: image,
+                cookingTime: '30-60 Min',
+                difficulty: 'Khas Daerah',
+                origin: origin,
+                ingredients: ingredients,
+                steps: steps,
+                tips: tips
+            };
+
+            // Unshift to place new recipe at the top
+            recipes.unshift(newRecipe);
+
+            // Close Modal & Reset Form
+            closeAddRecipeModal();
+
+            // Filter & Render Updated Recipes
+            filterRecipes();
+        }
+    </script>
+</body>
+</html>
